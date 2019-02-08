@@ -45,21 +45,15 @@ module.exports = function(cncserver) {
   };
 
   /**
-   * Calculate the duration for a pen movement from the distance.
+   * Calculate the speed for a pen movement.
    * Takes into account whether pen is up or down
    *
-   * @param {float} distance
-   *   Distance in steps that we'll be moving
-   * @param {int} min
-   *   Optional minimum value for output duration, defaults to 1.
    * @param {object} inPen
    *   Incoming pen object to check (buffer tip or bot current).
    * @returns {number}
    *   Millisecond duration of how long the move should take
    */
-  cncserver.utils.getDurationFromDistance = function(distance, min, inPen) {
-    if (typeof min === "undefined") min = 1;
-
+  cncserver.utils.getSpeed = function(inPen) {
     var minSpeed = parseFloat(cncserver.botConf.get('speed:min'));
     var maxSpeed = parseFloat(cncserver.botConf.get('speed:max'));
     var drawingSpeed = cncserver.botConf.get('speed:drawing');
@@ -75,6 +69,27 @@ module.exports = function(cncserver) {
     // Sanity check speed value
     speed = speed > maxSpeed ? maxSpeed : speed;
     speed = speed < minSpeed ? minSpeed : speed;
+    
+    return speed;
+  };
+
+  /**
+   * Calculate the duration for a pen movement from the distance.
+   * Takes into account whether pen is up or down
+   *
+   * @param {float} distance
+   *   Distance in steps that we'll be moving
+   * @param {int} min
+   *   Optional minimum value for output duration, defaults to 1.
+   * @param {object} inPen
+   *   Incoming pen object to check (buffer tip or bot current).
+   * @returns {number}
+   *   Millisecond duration of how long the move should take
+   */
+  cncserver.utils.getDurationFromDistance = function(distance, min, inPen) {
+    if (typeof min === "undefined") min = 1;
+    
+    var speed = cncserver.utils.getSpeed(inPen);
 
     // How many steps a second?
     return Math.max(Math.abs(Math.round(distance / speed * 1000)), min);
@@ -119,11 +134,13 @@ module.exports = function(cncserver) {
     if (cncserver.gConf.get('swapMotors')) {
       change = {
         x: change.y,
-        y: change.x
+        y: change.x,
       };
     }
+    
+    var speed = cncserver.utils.getSpeed(src);
 
-    return {d: duration, x: change.x, y: change.y};
+    return {d: duration, x: change.x, y: change.y, s: speed };
   };
 
   /**

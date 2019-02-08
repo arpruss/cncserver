@@ -328,6 +328,17 @@ module.exports = function(cncserver) {
     for(var v in values) {
       out = out.replace('%' + v, values[v]);
     }
+    
+    // scaled values
+    for(var v in values) {
+      out = out.replace(new RegExp('\\*'+v+'\\(([.0-9]+)\\)'), 
+        function(match, p1, offset, string) {
+            var x = parseFloat(p1) * values[v];
+            var s = x.toFixed(3);
+            // remove final zeroes
+            return s.replace(new RegExp(/\.?0+$/), '');
+        })
+    }
 
     return out;
   };
