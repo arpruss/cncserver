@@ -126,8 +126,8 @@ module.exports = function(cncserver) {
       change.x = cncserver.gConf.get('invertAxis:x') ? change.x * -1 : change.x;
       change.y = cncserver.gConf.get('invertAxis:y') ? change.y * -1 : change.y;
     } else { // Absolute! Just use the "new" absolute X & Y locations
-      change.x = cncserver.pen.x;
-      change.y = cncserver.pen.y;
+      change.x = cncserver.gConf.get('invertAxis:x') ? cncserver.bot.maxArea.width - cncserver.pen.x : cncserver.pen.x;
+      change.y = cncserver.gConf.get('invertAxis:y') ? cncserver.bot.maxArea.height - cncserver.pen.y : cncserver.pen.y;
     }
 
     // Swap motor positions
