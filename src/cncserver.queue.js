@@ -176,6 +176,8 @@ module.exports = function(cncserver) {
     // Sanity check duration to minimum of 1, int only
     duration = !duration ? 1 : Math.abs(parseInt(duration));
     duration = duration <= 0 ? 1 : duration;
+    
+    console.log(command);
 
     switch (command) {
       case 'move':
@@ -273,6 +275,8 @@ module.exports = function(cncserver) {
       // Serial command is direct string in item.command, no render needed.
       commandOut = [item.command];
     }
+
+    console.log(commandOut);
 
     return commandOut;
   };

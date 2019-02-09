@@ -76,7 +76,8 @@ module.exports = function(cncserver){
 
         var connectData =  {
           port: connectPath,
-          baudRate : Number(botController.baudRate)
+          baudRate : Number(botController.baudRate),
+          xon: true
         };
 
         cncserver.ipc.sendMessage('serial.connect', connectData);

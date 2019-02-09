@@ -305,7 +305,7 @@ function serialWrite (command, callback) {
       // It should realistically never take longer than half a second to send.
       var writeTimeout = setTimeout(function() {
         console.error('WRITE TIMEOUT, COMMAND FAILED:', command);
-      }, 500);
+      }, 500000);
 
       port.write(command + "\r", 'ascii', function() {
         clearTimeout(writeTimeout);
